@@ -1,8 +1,14 @@
-import React from 'react';
-import './Navbar.scss'
-import logo from '../../assets/images/main-section1/logo.svg';
+import React, { useState } from 'react';
+import './Navbar.scss';
+import logo from '../../assets/images/navbar/logo.svg';
 
 const Navbar: React.FC = () => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleMenu = () => {
+        setIsOpen(prev => !prev);
+    }
+
     return (
         <header className="navbar">
             <div className="navbar-left">
@@ -12,13 +18,13 @@ const Navbar: React.FC = () => {
                 <span className='navbar-logo-text'>Logo</span>
             </div>
 
-            <div className="navbar-links">
+            <nav className={`navbar-links ${isOpen ? 'open' : ''}`}>
                 <a href="#" className='navbar-link'>Option 1</a>
                 <a href="#" className='navbar-link'>Option 2</a>
                 <a href="#" className='navbar-link'>Option 3</a>
-            </div>
+            </nav>
 
-            <button className="navbar-hamburger" type="button">
+            <button className={`navbar-hamburger ${isOpen ? 'open' : ''}`}  type="button" onClick={toggleMenu}>
                 <span></span>
                 <span></span>
                 <span></span>
