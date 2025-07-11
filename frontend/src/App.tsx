@@ -3,6 +3,7 @@ import Navbar from './components/Navbar/Navbar';
 import MainSectionFirst from './components/MainSectionFirst/MainSectionFirst';
 import MainSectionSecond from './components/MainSectionSecond/MainSectionSecond';
 import MainSectionThird from './components/MainSectionThird/MainSectionThird';
+import MainSectionFourth from './components/MainSectionFourth/MainSectionFourth';
 
 
 const App: React.FC = () => {
@@ -12,6 +13,7 @@ const App: React.FC = () => {
       <MainSectionFirst />
       <MainSectionSecond />
       <MainSectionThird />
+      <MainSectionFourth />
     </>
   );
 };
