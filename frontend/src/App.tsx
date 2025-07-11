@@ -5,6 +5,7 @@ import MainSectionSecond from './components/MainSectionSecond/MainSectionSecond'
 import MainSectionThird from './components/MainSectionThird/MainSectionThird';
 import MainSectionFourth from './components/MainSectionFourth/MainSectionFourth';
 import MainSectionFifth from './components/MainSectionFifth/MainSectionFifth';
+import MainSectionSixth from './components/MainSectionSixth/MainSectionSixth';
 
 
 const App: React.FC = () => {
@@ -16,6 +17,7 @@ const App: React.FC = () => {
       <MainSectionThird />
       <MainSectionFourth />
       <MainSectionFifth />
+      <MainSectionSixth />
     </>
   );
 };
