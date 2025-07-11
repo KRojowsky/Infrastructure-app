@@ -1,8 +1,8 @@
 @import '../../styles/variables';
 
 .how-it-works {
-  background: linear-gradient(to bottom, #8C9495, #FFF);
-  padding: 4rem 1rem;
+  background: linear-gradient(to bottom, #8C9495, #FFF, #FFF);
+  padding: 3rem 1rem;
 
   &-title {
     text-align: center;
@@ -79,6 +79,11 @@
   }
 
   @media (max-width: 768px) {
+    &-title {
+      font-size: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
     &-content {
       flex-direction: column;
       align-items: center;
