@@ -1,9 +1,9 @@
 import React from 'react';
-import Sidebar from '../components/common/Sidebar/Sidebar';
-import SidebarMobile from '../components/common/SidebarMobile/SidebarMobile';
-import Navbar from '../components/common/Navbar/Navbar';
+import Sidebar from '../components/Common/Sidebar/Sidebar';
+import SidebarMobile from '../components/Common/SidebarMobile/SidebarMobile';
+import Navbar from '../components/Common/Navbar/Navbar';
 import Feed from '../components/Dashboard/Feed/Feed';
-import InfoBoard from '../components/common/InfoBoard/InfoBoard';
+import InfoBoard from '../components/Common/InfoBoard/InfoBoard';
 
 import '../styles/DashboardPage.scss';
 
