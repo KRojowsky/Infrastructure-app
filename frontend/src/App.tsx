@@ -1,24 +1,18 @@
 import React from 'react';
-import Navbar from './components/Navbar/Navbar';
-import MainSectionFirst from './components/MainSectionFirst/MainSectionFirst';
-import MainSectionSecond from './components/MainSectionSecond/MainSectionSecond';
-import MainSectionThird from './components/MainSectionThird/MainSectionThird';
-import MainSectionFourth from './components/MainSectionFourth/MainSectionFourth';
-import MainSectionFifth from './components/MainSectionFifth/MainSectionFifth';
-import MainSectionSixth from './components/MainSectionSixth/MainSectionSixth';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import HomePage from './pages/HomePage';
+import DashboardPage from './pages/DashboardPage';
 
 
 const App: React.FC = () => {
   return (
-    <>
-      <Navbar />
-      <MainSectionFirst />
-      <MainSectionSecond />
-      <MainSectionThird />
-      <MainSectionFourth />
-      <MainSectionFifth />
-      <MainSectionSixth />
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+      </Routes>
+    </Router>
   );
 };
 

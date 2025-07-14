@@ -1,0 +1,108 @@
+@import '../../../styles/variables';
+
+.how-it-works {
+  background: linear-gradient(to bottom, #8C9495, #FFF, #FFF);
+  padding: 3rem 1rem;
+
+  &-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 7rem;
+    font-weight: 500;
+    color: $black;
+  }
+
+  &-content {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 3rem;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  &-points {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  &-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+
+    .point-number {
+      background-color: $points-bg;
+      color: $white;
+      font-weight: bold;
+      font-size: 1.1rem;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      flex-shrink: 0;
+    }
+
+    .point-texts {
+      h3 {
+        margin: 0 0 0.5rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: $black;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.95rem;
+        color: $points-subtexts;
+        line-height: 1.4;
+      }
+    }
+  }
+
+  &-image {
+    flex: 1;
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    &-title {
+      font-size: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    &-content {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    &-point {
+      flex-direction: column;
+      align-items: center;
+
+      .point-texts {
+        h3, p {
+          text-align: center;
+        }
+      }
+    }
+
+    &-image {
+      display: none;
+    }
+  }
+}

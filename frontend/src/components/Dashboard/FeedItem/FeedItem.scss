@@ -1,0 +1,110 @@
+@import '../../../styles/variables';
+
+.feed-item {
+    border: 1px solid $border-line;
+    border-radius: 10px;
+    padding: 1rem;
+    background-color: $white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+    &-header {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        margin-bottom: .75rem;
+    }
+
+    &-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid $dashboard-border-line;
+    }
+
+    &-author-top {
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    &-time {
+        font-size: .8rem;
+        color: $points-subtexts;
+    }
+
+    &-image-wrapper {
+        position: relative;
+        margin-bottom: .75rem;
+
+        img {
+            width: 100%;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+    }
+
+    &-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.7);
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0 0.5rem;
+        border-radius: 4px;
+
+        &-left {
+            left: 0.5rem;
+        }
+
+        &-right {
+            right: 0.5rem;
+        }
+    }
+
+    &-footer {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #444;
+    }
+
+    &-description {
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+
+    &-author {
+        font-weight: 600;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        color: $black;
+        white-space: nowrap;
+    }
+
+    &-text {
+        font-size: 0.9rem;
+        line-height: 1.4;
+        color: $points-subtexts;
+    }
+
+    @media (max-width: 1023px) {
+        padding: 0.75rem;
+
+        &-avatar {
+            width: 32px;
+            height: 32px;
+        }
+
+        &-author-top, &-footer {
+            font-size: 0.8rem;
+        }
+
+        &-time, &-author, &-text, &-footer span {
+            font-size: 0.7rem;
+        }
+    }
+}

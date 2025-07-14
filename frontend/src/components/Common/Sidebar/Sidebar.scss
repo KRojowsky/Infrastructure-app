@@ -1,0 +1,52 @@
+@import '../../../styles/variables';
+
+.sidebar{
+    background-color: $dashboard-bg;
+    border-right: 1px solid $dashboard-border-line;
+
+    &-logo{
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 5rem;
+
+        img {
+            width: 48px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+    }
+
+    &-menu ul {
+        list-style: none;
+        padding: 0;
+        width: 100%;
+
+        li{
+            padding: .2rem .5rem;
+            margin: 1.5rem 0;
+            cursor: pointer;
+        }
+    }
+
+    @media (max-width: 1023px) {
+        &-logo {
+            margin-bottom: 3rem;
+
+            img {
+                width: 36px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        &-menu ul {
+            font-size: .9rem;
+        }
+    }
+}
