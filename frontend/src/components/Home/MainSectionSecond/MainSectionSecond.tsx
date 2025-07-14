@@ -1,6 +1,6 @@
 import React from 'react';
 import './MainSectionSecond.scss';
-import road from '../../../assets/images/home/main-section-2/road.png';
+import road from '../../../assets/images/Home/main-section-2/road.png';
 
 
 const points = [

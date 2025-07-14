@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Navbar.scss';
-import logo from '../../../assets/images/home/navbar/logo.svg';
+import logo from '../../../assets/images/Home/navbar/logo.svg';
 
 const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
