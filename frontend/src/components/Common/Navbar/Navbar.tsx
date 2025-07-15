@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../../../assets/images/Home/navbar/logo.svg';
+import logo from '../../../assets/images/Home/navbar/logo.png';
 import './Navbar.scss';
 
 const Navbar: React.FC = () => {

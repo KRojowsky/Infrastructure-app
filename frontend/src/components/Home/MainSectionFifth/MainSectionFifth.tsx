@@ -52,7 +52,7 @@ const MainSectionFifth: React.FC = () => {
   };
 
   return (
-    <section className="air-quality">
+    <section id="air-quality" className="air-quality">
       <h2 className="air-quality-title">Monitoring jakości powietrza</h2>
 
       <div className="air-quality-content">

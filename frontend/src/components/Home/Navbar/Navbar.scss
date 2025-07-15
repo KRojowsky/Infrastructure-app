@@ -1,11 +1,11 @@
 @import '../../../styles/variables';
 
 .navbar {
-    background-color: $navbar-bg-color;
+    background-color: $navbar-bg-color !important;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: .5rem 1rem;
+    padding: .1rem 11rem;
     color: $text-color;
     top: 0;
     z-index: 2;
@@ -14,36 +14,43 @@
     &-left {
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 5px;
 
         .navbar-logo {
             display: flex;
             align-items: center;
 
             &-img {
-                width: 40px;
+                width: 50px;
                 height: auto;
                 display: block;
             }
         }
 
         .navbar-logo-text {
-            font-size: 1.5rem;
+            font-size: 1.9rem;
             font-weight: bold;
         }
     }
 
     &-links {
         display: flex;
-        gap: 1.5rem;
+        gap: 1.4rem;
         z-index: 2;
         
         a {
             text-decoration: none;
             color: $text-color;
+            padding: 10px;
+            border-radius: 10px;
+
+            &:hover{
+                background-color: $nav-links-bg-hover;
+                transition: .3s;
+            }
         }
 
-        @media(max-width: 768px) {
+        @media(max-width: 850px) {
             position: absolute;
             top: 55px;
             right: .8rem;
@@ -64,7 +71,7 @@
     &-hamburger {
         display: none;
 
-        @media (max-width: 768px) {
+        @media (max-width: 850px) {
             display: flex;
             flex-direction: column;
             justify-content: space-between;

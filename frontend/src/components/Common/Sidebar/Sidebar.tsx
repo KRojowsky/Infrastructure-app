@@ -1,6 +1,6 @@
 import React from 'react'
 import './Sidebar.scss';
-import logo from '../../../assets/images/Home/navbar/logo.svg';
+import logo from '../../../assets/images/Home/navbar/logo.png';
 
 const Sidebar: React.FC = () => {
     return (

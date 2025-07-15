@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Navbar.scss';
-import logo from '../../../assets/images/Home/navbar/logo.svg';
+import logo from '../../../assets/images/Home/navbar/logo.png';
 
 const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -15,13 +15,14 @@ const Navbar: React.FC = () => {
                 <div className="navbar-logo">
                     <img src={logo} alt="Logo" className='navbar-logo-img'/>
                 </div>
-                <span className='navbar-logo-text'>Logo</span>
+                <span className='navbar-logo-text'>InfraFix</span>
             </div>
 
             <nav className={`navbar-links ${isOpen ? 'open' : ''}`}>
-                <a href="#" className='navbar-link'>Option 1</a>
-                <a href="#" className='navbar-link'>Option 2</a>
-                <a href="#" className='navbar-link'>Option 3</a>
+                <a href="#how-it-works" className='navbar-link' onClick={() => setIsOpen(false)}>Jak to działa?</a>
+                <a href="#air-quality" className='navbar-link' onClick={() => setIsOpen(false)}>Monitoring jakości powietrza</a>
+                <a href="#" className='navbar-link'>Logowanie</a>
+                <a href="#" className='navbar-link'>Rejestracja</a>
             </nav>
 
             <button className={`navbar-hamburger ${isOpen ? 'open' : ''}`}  type="button" onClick={toggleMenu}>

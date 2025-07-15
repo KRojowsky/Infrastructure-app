@@ -24,7 +24,7 @@ const points = [
 
 const MainSectionSecond: React.FC = () => {
     return (
-        <section className='how-it-works'>
+        <section id="how-it-works" className='how-it-works'>
             <h2 className="how-it-works-title">Jak działa system zgłaszania problemów infrastrukturalnych?</h2>
 
             <div className="how-it-works-content">
