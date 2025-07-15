@@ -5,17 +5,15 @@ import './Profile.scss';
 type PostStatus = 'done' | 'inProgress' | 'pending';
 
 interface Post {
-  src: string;
-  status: PostStatus;
-  images: string[];
   id: number;
   author: string;
   avatar: string;
   time: string;
+  images: string[];
   description: string;
+  status: 'done' | 'inProgress' | 'pending';
   likes: number;
   comments: number;
-  status: PostStatus;
 }
 
 const Profile: React.FC = () => {
