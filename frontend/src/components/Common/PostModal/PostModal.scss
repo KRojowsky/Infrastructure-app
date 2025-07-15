@@ -1,0 +1,123 @@
+@import '../../../styles/variables';
+
+.post-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+
+  &-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid $dashboard-border-line;
+  }
+
+  &-time {
+    font-size: 0.85rem;
+    color: $points-subtexts;
+  }
+
+  &-image-wrapper {
+    position: relative;
+    width: 100%;
+    max-height: 350px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      max-height: 350px;
+      object-fit: cover;
+      border-radius: 6px;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0 0.6rem;
+    border-radius: 4px;
+    z-index: 1;
+
+    &-left {
+      left: 0.5rem;
+    }
+
+    &-right {
+      right: 0.5rem;
+    }
+  }
+
+  &-desc {
+    font-size: 1rem;
+    line-height: 1.4;
+    color: $black;
+  }
+
+  &-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: $points-subtexts;
+
+    strong {
+      color: $black;
+    }
+  }
+
+  &-comments {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    h4 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+      background: #f9f9f9;
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+
+    textarea {
+      width: 90%;
+      border: 1px solid $dashboard-border-line;
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-size: 0.9rem;
+      resize: none;
+      margin-bottom: 10px;
+    }
+
+    button {
+      align-self: flex-end;
+      background: $black;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.9rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+    }
+  }
+}

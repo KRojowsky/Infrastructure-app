@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FeedItem from '../FeedItem/FeedItem';
+import Modal from '../../Common/Modal/Modal';
+import PostModal from '../../Common/PostModal/PostModal';
 import './Feed.scss';
 
 const mockPosts = [
@@ -25,7 +27,6 @@ const mockPosts = [
     images: [
       'https://placehold.co/600x300?text=Zdjęcie+A',
       'https://placehold.co/600x300?text=Zdjęcie+B',
-      'https://placehold.co/600x300?text=Zdjęcie+C',
     ],
     description: 'Nieświecąca latarnia przy przedszkolu.',
     status: 'W trakcie',
@@ -35,12 +36,20 @@ const mockPosts = [
 ];
 
 const Feed: React.FC = () => {
+  const [selectedPost, setSelectedPost] = useState<any | null>(null);
+
   return (
-    <div className="feed">
-      {mockPosts.map((post) => (
-        <FeedItem key={post.id} post={post} />
-      ))}
-    </div>
+    <>
+      <div className="feed">
+        {mockPosts.map((post) => (
+          <FeedItem key={post.id} post={post} onClick={setSelectedPost} />
+        ))}
+      </div>
+
+      <Modal isOpen={!!selectedPost} onClose={() => setSelectedPost(null)}>
+        {selectedPost && <PostModal post={selectedPost} />}
+      </Modal>
+    </>
   );
 };
 
