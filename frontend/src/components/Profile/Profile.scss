@@ -1,0 +1,135 @@
+@import '../../styles/variables';
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+
+    &-top {
+        display: flex;
+        align-items: center;
+        gap: 2.5rem;
+        margin-bottom: 3rem;
+    }
+
+    &-avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid $dashboard-border-line;
+    }
+
+    &-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &-name {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: $black;
+    }
+
+    &-stats {
+        span {
+            font-weight: 700;
+            color: $black;
+        }
+    }
+
+    &-posts {
+        width: 100%;
+        max-width: 900px;
+        h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .profile-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            border-bottom: 1px solid $dashboard-border-line;
+            justify-content: center;
+
+            button {
+                padding: 0.8rem;
+                cursor: pointer;
+                font-size: 0.8rem;
+                border: 1px solid $white;
+                background-color: $white;
+
+                &.active {
+                    border-bottom: 1px solid $black;
+                }
+
+                &:hover {
+                    border-bottom: 1px solid $black;
+                }
+            }
+        }
+
+
+        .posts-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            justify-items: center;
+        }
+
+        .post-image {
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
+@media (max-width: 1023px) {
+    .profile {
+        &-avatar {
+            width: 125px;
+            height: 125px;
+        }
+
+        &-top {
+            gap: 1.5rem;
+        }
+
+        &-name {
+            margin-bottom: .5rem;
+            font-size: 1.2rem;
+        }
+
+        &-stats {
+            font-size: .8rem;
+        }
+
+        &-posts {
+            .profile-filters {
+                gap: 0.4rem;
+
+                button {
+                    padding: 0.4rem;
+                    cursor: pointer;
+                    font-size: 0.7rem;
+                    border: 1px solid $white;
+                    background-color: $white;
+
+                    &.active {
+                        border-bottom: 1px solid $black;
+                    }
+
+                    &:hover {
+                        border-bottom: 1px solid $black;
+                    }
+                }
+            }
+        }
+    }
+}

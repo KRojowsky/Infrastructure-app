@@ -1,6 +1,6 @@
 @import 'variables';
 
-.dashboard-layout {
+.layout-layout {
   display: flex;
   height: 100vh;
   overflow: hidden;
@@ -10,7 +10,7 @@
   }
 }
 
-.dashboard-layout > :first-child {
+.layout-layout > :first-child {
   width: 250px;
   @media (max-width: 1023px) {
         width: 180px;
@@ -21,20 +21,20 @@
   }
 }
 
-.dashboard-main {
+.layout-main {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
-.dashboard-content {
+.layout-content {
   flex: 1;
   display: flex;
   overflow: hidden;
 }
 
-.dashboard-feed {
+.layout-feed {
   flex: 2;
   padding: 2rem 5rem;
   overflow-y: auto;
@@ -48,7 +48,7 @@
   }
 }
 
-.dashboard-info {
+.layout-info {
   width: 300px;
   border-left: 1px solid #eee;
   overflow-y: auto;
