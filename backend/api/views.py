@@ -1,17 +1,16 @@
-from rest_framework import generics
-from django.contrib.auth.models import User
-from rest_framework.serializers import ModelSerializer
+# api/views.py
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
-class RegisterSerializer(ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('username', 'password', 'email')
-        extra_kwargs = {'password': {'write_only': True}}
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
 
-    def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
-
-class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = RegisterSerializer
+    def get(self, request):
+        avatar_url = request.user.avatar.url if request.user.avatar else None
+        return Response({
+            "first_name": request.user.first_name,
+            "last_name": request.user.last_name,
+            "email": request.user.email,
+            "avatar": avatar_url,
+        })
