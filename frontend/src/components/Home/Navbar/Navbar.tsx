@@ -1,31 +1,58 @@
 import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Navbar.scss';
 import logo from '../../../assets/images/Home/navbar/logo.png';
 
 const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const location = useLocation();
+    const navigate = useNavigate();
 
-    const toggleMenu = () => {
-        setIsOpen(prev => !prev);
-    }
+    const toggleMenu = () => setIsOpen(prev => !prev);
+    const closeMenu = () => setIsOpen(false);
+
+    const handleScrollLink = (id: string) => {
+        closeMenu();
+        if (location.pathname !== '/') {
+            navigate(`/#${id}`);
+        } else {
+            const element = document.getElementById(id);
+            if (element) element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
 
     return (
         <header className="navbar">
             <div className="navbar-left">
-                <div className="navbar-logo">
-                    <img src={logo} alt="Logo" className='navbar-logo-img'/>
-                </div>
-                <span className='navbar-logo-text'>InfraFix</span>
+                <Link to="/" className="navbar-logo" onClick={closeMenu}>
+                    <img src={logo} alt="InfraFix logo" className="navbar-logo-img" />
+                    <span className="navbar-logo-text">InfraFix</span>
+                </Link>
             </div>
 
             <nav className={`navbar-links ${isOpen ? 'open' : ''}`}>
-                <a href="#how-it-works" className='navbar-link' onClick={() => setIsOpen(false)}>Jak to działa?</a>
-                <a href="#air-quality" className='navbar-link' onClick={() => setIsOpen(false)}>Monitoring jakości powietrza</a>
-                 <a href="/login" className='navbar-link'>Logowanie</a>
-                <a href="#" className='navbar-link'>Rejestracja</a>
+                <button className="navbar-link" onClick={() => handleScrollLink('how-it-works')}>
+                    Jak to działa?
+                </button>
+
+                <button className="navbar-link" onClick={() => handleScrollLink('air-quality')}>
+                    Monitoring jakości powietrza
+                </button>
+
+                <Link to="/login" className="navbar-link" onClick={closeMenu}>
+                    Logowanie
+                </Link>
+
+                <Link to="/register" className="navbar-link" onClick={closeMenu}>
+                    Rejestracja
+                </Link>
             </nav>
 
-            <button className={`navbar-hamburger ${isOpen ? 'open' : ''}`}  type="button" onClick={toggleMenu}>
+            <button
+                className={`navbar-hamburger ${isOpen ? 'open' : ''}`}
+                type="button"
+                onClick={toggleMenu}
+            >
                 <span></span>
                 <span></span>
                 <span></span>

@@ -5,7 +5,7 @@ const MainSectionSixth: React.FC = () => {
   return (
     <footer className="footer">
       <div className="footer-content">
-        <p>© 2025 Logo. Wszelkie prawa zastrzeżone.</p>
+        <p>© 2026 InfraFix. Wszelkie prawa zastrzeżone.</p>
         <nav className="footer-nav">
           <a href="#privacy">Polityka prywatności</a>
           <a href="#terms">Regulamin</a>

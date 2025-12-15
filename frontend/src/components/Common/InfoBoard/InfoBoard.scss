@@ -4,7 +4,11 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  padding: 1rem;
+  padding: 1.5rem;
+  background-color: $dashboard-bg;
+  min-height: 100%;
+  border-left: 1px solid $dashboard-border-line;
+  box-sizing: border-box;
 
   &-card {
     background-color: $white;

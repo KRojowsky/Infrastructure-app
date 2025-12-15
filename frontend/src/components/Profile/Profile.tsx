@@ -1,96 +1,95 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import FeedItem from '../Dashboard/FeedItem/FeedItem'; // używamy tego samego komponentu co w Feed
+import Modal from '../Common/Modal/Modal';
 import PostModal from '../Common/PostModal/PostModal';
 import './Profile.scss';
 
-type PostStatus = 'done' | 'inProgress' | 'pending';
+interface User {
+  first_name: string;
+  last_name: string;
+  avatar?: string | null;
+}
+
+interface ReportImage {
+  id: number;
+  image: string;
+}
 
 interface Post {
   id: number;
-  author: string;
-  avatar: string;
-  time: string;
-  images: string[];
+  title: string;
   description: string;
-  status: 'done' | 'inProgress' | 'pending';
-  likes: number;
-  comments: number;
+  category: string;
+  status: 'done' | 'in-progress' | 'pending';
+  priority: 'low' | 'medium' | 'high';
+  created_at: string;
+  images: ReportImage[];
+  author_name: string;
+  author_avatar?: string | null;
 }
 
 const Profile: React.FC = () => {
-  const avatar = 'https://randomuser.me/api/portraits/women/75.jpg';
-  const firstName = 'Anna';
-  const lastName = 'Nowak';
-  const stats = {
-    done: 12,
-    inProgress: 3,
-    pending: 2,
+  const [user, setUser] = useState<User | null>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [filter, setFilter] = useState<'all' | 'done' | 'in-progress' | 'pending'>('all');
+  const [loading, setLoading] = useState(true);
+
+  // Mapowanie kategorii na polskie nazwy
+  const categoryLabels: Record<string, string> = {
+    energy: 'Energetyka',
+    water: 'Woda / kanalizacja',
+    road: 'Infrastruktura drogowa',
+    other: 'Inne',
   };
 
-  const allPosts: Post[] = [
-    {
-      id: 1,
-      author: `${firstName} ${lastName}`,
-      avatar,
-      time: '2 godziny temu',
-      images: [
-        'https://picsum.photos/500/700?random=1',
-        'https://picsum.photos/500/700?random=11',
-      ],
-      description: 'Opis posta numer 1',
-      status: 'done',
-      likes: 15,
-      comments: 2,
-    },
-    {
-      id: 2,
-      author: `${firstName} ${lastName}`,
-      avatar,
-      time: '1 dzień temu',
-      images: ['https://picsum.photos/500/700?random=2'],
-      description: 'Opis posta numer 2',
-      status: 'inProgress',
-      likes: 8,
-      comments: 1,
-    },
-    {
-      id: 3,
-      author: `${firstName} ${lastName}`,
-      avatar,
-      time: '3 dni temu',
-      images: ['https://picsum.photos/500/700?random=3'],
-      description: 'Opis posta numer 3',
-      status: 'pending',
-      likes: 0,
-      comments: 0,
-    },
-    {
-      id: 4,
-      author: `${firstName} ${lastName}`,
-      avatar,
-      time: '5 dni temu',
-      images: [
-        'https://picsum.photos/500/700?random=4',
-        'https://picsum.photos/500/700?random=44',
-        'https://picsum.photos/500/700?random=444',
-      ],
-      description: 'Opis posta numer 4',
-      status: 'done',
-      likes: 20,
-      comments: 5,
-    },
-  ];
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get('http://localhost:8000/api/users/me/', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('access')}` },
+        });
+        setUser(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-  const [filter, setFilter] = useState<'all' | PostStatus>('all');
-  const filteredPosts = filter === 'all' ? allPosts : allPosts.filter(p => p.status === filter);
+    const fetchPosts = async () => {
+      try {
+        const res = await axios.get('http://localhost:8000/api/reports/user/', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('access')}` },
+        });
+        setPosts(res.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+    fetchUser();
+    fetchPosts();
+  }, []);
+
+  const filteredPosts = filter === 'all' ? posts : posts.filter(p => p.status === filter);
+
+  const stats = {
+    done: posts.filter(p => p.status === 'done').length,
+    inProgress: posts.filter(p => p.status === 'in-progress').length,
+    pending: posts.filter(p => p.status === 'pending').length,
+  };
+
+  const avatarUrl =
+    user?.avatar || 'https://i.pravatar.cc/150?u=' + (user?.first_name || 'placeholder');
 
   return (
     <div className="profile">
       <div className="profile-top">
-        <img src={avatar} alt={`${firstName} ${lastName}`} className="profile-avatar" />
+        <img src={avatarUrl} alt={`${user?.first_name} ${user?.last_name}`} className="profile-avatar" />
         <div className="profile-info">
-          <h2 className="profile-name">{firstName} {lastName}</h2>
+          <h2 className="profile-name">{user?.first_name} {user?.last_name}</h2>
           <div className="profile-stats">
             <div>Zrealizowane: <span>{stats.done}</span></div>
             <div>W trakcie: <span>{stats.inProgress}</span></div>
@@ -105,43 +104,42 @@ const Profile: React.FC = () => {
         <div className="profile-filters">
           <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>Wszystkie</button>
           <button className={filter === 'done' ? 'active' : ''} onClick={() => setFilter('done')}>Zrealizowane</button>
-          <button className={filter === 'inProgress' ? 'active' : ''} onClick={() => setFilter('inProgress')}>W trakcie</button>
+          <button className={filter === 'in-progress' ? 'active' : ''} onClick={() => setFilter('in-progress')}>W trakcie</button>
           <button className={filter === 'pending' ? 'active' : ''} onClick={() => setFilter('pending')}>Oczekujące</button>
         </div>
 
-        <div className="posts-gallery">
-          {filteredPosts.map((post) => (
-            <img
-              key={post.id}
-              src={post.images[0]}
-              alt={`Post ${post.id}`}
-              className="post-image"
-              onClick={() => setSelectedPost(post)}
-              style={{ cursor: 'pointer' }}
-            />
-          ))}
-        </div>
+        {loading ? (
+          <p>Ładowanie zgłoszeń...</p>
+        ) : filteredPosts.length === 0 ? (
+          <p>Brak zgłoszeń do wyświetlenia.</p>
+        ) : (
+          <div className="posts-gallery">
+            {filteredPosts.map(post => (
+              <FeedItem
+                key={post.id}
+                post={{
+                  id: post.id,
+                  author: post.author_name,
+                  author_avatar: post.author_avatar,
+                  time: new Date(post.created_at).toLocaleString(),
+                  images: post.images.map(img => img.image),
+                  description: post.description,
+                  category: categoryLabels[post.category] || post.category,
+                  status: post.status,
+                  priority: post.priority,
+                  likes: 0,
+                  comments: 0,
+                }}
+                onClick={setSelectedPost}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
-      {selectedPost && (
-        <div
-          className="modal-overlay"
-          onClick={() => setSelectedPost(null)}
-        >
-          <div
-            className="modal-content"
-            onClick={e => e.stopPropagation()}
-          >
-            <PostModal post={selectedPost} />
-            <button
-              className="modal-close"
-              onClick={() => setSelectedPost(null)}
-            >
-              ×
-            </button>
-          </div>
-        </div>
-      )}
+      <Modal isOpen={!!selectedPost} onClose={() => setSelectedPost(null)}>
+        {selectedPost && <PostModal post={selectedPost} />}
+      </Modal>
     </div>
   );
 };

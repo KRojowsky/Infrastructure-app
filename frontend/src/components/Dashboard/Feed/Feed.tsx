@@ -1,48 +1,76 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FeedItem from '../FeedItem/FeedItem';
 import Modal from '../../Common/Modal/Modal';
 import PostModal from '../../Common/PostModal/PostModal';
 import './Feed.scss';
+import axios from 'axios';
 
-const mockPosts = [
-  {
-    id: 1,
-    author: 'Anna Nowak',
-    avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
-    time: '10 minut temu',
-    images: [
-      'https://placehold.co/600x300?text=Zdjęcie+1',
-      'https://placehold.co/600x300?text=Zdjęcie+2',
-    ],
-    description: 'Uszkodzony chodnik na ul. Głównej.',
-    status: 'Oczekujące',
-    likes: 12,
-    comments: 3,
-  },
-  {
-    id: 2,
-    author: 'Jan Kowalski',
-    avatar: 'https://randomuser.me/api/portraits/men/33.jpg',
-    time: '1 godzina temu',
-    images: [
-      'https://placehold.co/600x300?text=Zdjęcie+A',
-      'https://placehold.co/600x300?text=Zdjęcie+B',
-    ],
-    description: 'Nieświecąca latarnia przy przedszkolu.',
-    status: 'W trakcie',
-    likes: 7,
-    comments: 1,
-  },
-];
+interface ReportImage {
+  id: number;
+  image: string;
+}
+
+interface Report {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  status: string;
+  priority: string;
+  created_at: string;
+  latitude: number;
+  longitude: number;
+  images: ReportImage[];
+  author_name: string;
+  author_avatar?: string;
+}
 
 const Feed: React.FC = () => {
-  const [selectedPost, setSelectedPost] = useState<any | null>(null);
+  const [reports, setReports] = useState<Report[]>([]);
+  const [selectedPost, setSelectedPost] = useState<Report | null>(null);
+
+  // Mapa kategorii po polsku
+  const categoryLabels: Record<string, string> = {
+    energy: 'Energetyka',
+    water: 'Woda / kanalizacja',
+    road: 'Infrastruktura drogowa',
+    other: 'Inne',
+  };
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const res = await axios.get('http://localhost:8000/api/reports/');
+        setReports(res.data);
+      } catch (error) {
+        console.error('Błąd podczas pobierania raportów:', error);
+      }
+    };
+    fetchReports();
+  }, []);
 
   return (
     <>
       <div className="feed">
-        {mockPosts.map((post) => (
-          <FeedItem key={post.id} post={post} onClick={setSelectedPost} />
+        {reports.map((report) => (
+          <FeedItem
+            key={report.id}
+            post={{
+              id: report.id,
+              author: report.author_name || 'Anonim',
+              author_avatar: report.author_avatar || 'http://localhost:8000/media/avatars/avatar.svg',
+              time: new Date(report.created_at).toLocaleString(),
+              images: report.images.map((img) => img.image),
+              description: report.description,
+              category: categoryLabels[report.category] || report.category,
+              status: report.status,
+              priority: report.priority,
+              likes: report.likes_count,        // <- pobierz z backendu
+              comments: report.comments_count,  // <- pobierz z backendu
+              is_liked_by_me: report.is_liked,  // <- pobierz z backendu
+            }}
+            onClick={setSelectedPost}
+          />
         ))}
       </div>
 
