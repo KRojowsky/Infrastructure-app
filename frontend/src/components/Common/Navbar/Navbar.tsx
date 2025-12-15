@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import logo from '../../../assets/images/Home/navbar/logo.png';
 import './Navbar.scss';
-import { useNavigate, Link } from 'react-router-dom'; // ✅ Link importowany
+import { useNavigate, Link } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 
 interface User {
   id: number;
   first_name: string;
   last_name: string;
+  role: 'community' | 'authority';
+  office_name?: string;
   avatar?: string;
 }
 
@@ -22,9 +24,7 @@ const Navbar: React.FC = () => {
 
       try {
         const res = await fetch('http://localhost:8000/api/users/me/', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error('Nie można pobrać użytkownika');
         const data = await res.json();
@@ -74,7 +74,9 @@ const Navbar: React.FC = () => {
 
         {user ? (
           <Link to="/profile" className="navbar-name">
-            {user.first_name} {user.last_name}
+            {user.role === 'authority'
+              ? `${user.office_name }`
+              : `${user.first_name} ${user.last_name}`}
           </Link>
         ) : (
           <span className="navbar-name">Gość</span>

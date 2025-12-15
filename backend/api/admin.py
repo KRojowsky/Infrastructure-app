@@ -51,7 +51,7 @@ class ReportCommentInline(admin.TabularInline):
 
 @admin.register(Report)
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ('title', 'user', 'category', 'created_at', 'latitude', 'longitude', 'likes_count', 'comments_count')
+    list_display = ('title', 'user', 'category', 'created_at', 'latitude', 'longitude', 'city', 'likes_count', 'comments_count')
     list_filter = ('category', 'created_at')
     search_fields = ('title', 'description', 'user__email')
     readonly_fields = ('created_at', 'likes_count', 'comments_count')

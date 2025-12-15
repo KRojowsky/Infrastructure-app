@@ -7,6 +7,7 @@ interface Comment {
   author_name: string;
   author_avatar?: string;
   created_at: string;
+  author_role?: string; // Załóżmy, że zwracamy role autora (np. "authority" dla władz terytorialnych)
 }
 
 interface Post {
@@ -111,6 +112,12 @@ const PostModal: React.FC<Props> = ({ post }) => {
       const data = await res.json();
       setComments((prev) => [...prev, data]);
       setNewComment('');
+
+      // Jeśli autor jest z władz terytorialnych, wyślij event do InfoBoard
+      if (data.author_role === 'authority') {
+        const event = new CustomEvent('newAuthorityComment', { detail: data });
+        window.dispatchEvent(event);
+      }
     } catch (err) {
       console.error('Błąd dodawania komentarza:', err);
     }

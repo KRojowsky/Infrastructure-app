@@ -51,6 +51,7 @@ class Report(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reports')
     title = models.CharField(max_length=200)
+    city = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField()
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     latitude = models.FloatField()

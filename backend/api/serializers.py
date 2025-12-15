@@ -40,14 +40,13 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'avatar', 'role']
+        fields = ['first_name', 'last_name', 'avatar', 'role', 'office_name'] 
 
     def get_avatar(self, obj):
         request = self.context.get('request')
         if obj.avatar:
             return request.build_absolute_uri(obj.avatar.url)
         return request.build_absolute_uri(settings.MEDIA_URL + 'avatars/avatar.svg')
-
 
 
 class ReportImageSerializer(serializers.ModelSerializer):
@@ -68,6 +67,7 @@ class ReportSerializer(serializers.ModelSerializer):
     images = ReportImageSerializer(many=True, read_only=True)
     author_name = serializers.CharField(source='user.get_full_name', read_only=True)
     author_avatar = serializers.SerializerMethodField()
+    city = serializers.CharField(source='user.city', read_only=True)
 
     likes_count = serializers.IntegerField(source='likes.count', read_only=True)
     comments_count = serializers.IntegerField(source='comments.count', read_only=True)
@@ -81,6 +81,7 @@ class ReportSerializer(serializers.ModelSerializer):
             'latitude', 'longitude',
             'images',
             'author_name', 'author_avatar',
+            'city',
             'status', 'priority',
             'likes_count',
             'comments_count',

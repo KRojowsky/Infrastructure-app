@@ -6,6 +6,7 @@ interface Post {
   author: string;
   author_avatar?: string | null;
   time: string;
+  city: string;
   images: string[];
   description: string;
   status: string;
@@ -82,7 +83,10 @@ const FeedItem: React.FC<Props> = ({ post, onClick }) => {
         <img src={avatarUrl} alt={post.author} className="feed-item-avatar" />
         <div className="feed-item-header-text">
           <div className="feed-item-author">{post.author}</div>
-          <div className="feed-item-time">{post.time}</div>
+          <div className="feed-item-time">
+            {post.time}
+            {post.city && <span className="feed-item-city"> • {post.city}</span>}
+          </div>
         </div>
       </div>
 

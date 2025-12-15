@@ -30,30 +30,44 @@ class ReportCreateView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        data = request.data
-        serializer = ReportSerializer(data=data)
+        serializer = ReportSerializer(data=request.data)
         if serializer.is_valid():
-            report = serializer.save(user=request.user)
+            report = serializer.save(
+                user=request.user,
+                city=request.user.city
+            )
 
-            # Zapisz zdjęcia
             images = request.FILES.getlist('images')
             for img in images:
                 ReportImage.objects.create(report=report, image=img)
 
-            # Zwróć pełne dane raportu (z obrazkami)
-            serializer = ReportSerializer(report, context={'request': request})
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(
+                ReportSerializer(report, context={'request': request}).data,
+                status=status.HTTP_201_CREATED
+            )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ReportListView(generics.ListAPIView):
-    queryset = Report.objects.all().order_by('-created_at')
     serializer_class = ReportSerializer
     permission_classes = [permissions.AllowAny]
 
-    def get_serializer_context(self):
-        return {'request': self.request}
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Report.objects.all().order_by('-created_at')
+
+        if not user.is_authenticated:
+            return queryset
+
+        if user.role == 'authority':
+            return queryset.filter(
+                city=user.city,
+                category=user.area
+            )
+
+        # 🔹 zwykły user (społeczność)
+        return queryset
 
 
 class UserReportListView(generics.ListAPIView):

@@ -118,7 +118,7 @@ const Register: React.FC = () => {
               {role === 'authority' && (
                 <>
                   <div className="form-group">
-                    <label>Nazwa urzędu</label>
+                    <label>Nazwa urzędu / instytucji</label>
                     <input type="text" name="office_name" value={form.office_name} onChange={handleInput} />
                   </div>
                   <div className="form-group">

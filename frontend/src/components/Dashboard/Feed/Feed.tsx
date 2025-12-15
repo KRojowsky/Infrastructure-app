@@ -60,6 +60,7 @@ const Feed: React.FC = () => {
               author: report.author_name || 'Anonim',
               author_avatar: report.author_avatar || 'http://localhost:8000/media/avatars/avatar.svg',
               time: new Date(report.created_at).toLocaleString(),
+              city: report.city,
               images: report.images.map((img) => img.image),
               description: report.description,
               category: categoryLabels[report.category] || report.category,
