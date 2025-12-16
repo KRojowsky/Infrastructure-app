@@ -1,14 +1,12 @@
-.history-page {
-  padding: 1rem;
+.history-feed {
+  padding: 0 5rem;
+}
 
-  h2 {
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-  }
+.history-feed h2 {
+  margin-bottom: 1rem;
+}
 
-  .history-feed {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
+.history-empty {
+  opacity: 0.7;
+  font-style: italic;
 }

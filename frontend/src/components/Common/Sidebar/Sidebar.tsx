@@ -27,7 +27,7 @@ const Sidebar: React.FC = () => {
           <li>
             <Link to="/notifications">🔔 Powiadomienia</Link>
           </li>
-          <li>
+          <li className={location.pathname === '/settings' ? 'active' : ''}>
             <Link to="/settings">⚙️ Ustawienia</Link>
           </li>
         </ul>

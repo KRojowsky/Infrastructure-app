@@ -11,6 +11,8 @@ import NewReport from './components/Dashboard/NewReport/NewReport';
 import History from './components/Dashboard/History/History';
 import PanelPage from './components/PanelPage/PanelPage'; // ✅ import PanelPage
 import PrivateRoute from './components/PrivateRoute';
+import SettingsPage from './components/Dashboard/Settings/Settings';
+
 
 const App: React.FC = () => {
   return (
@@ -29,6 +31,8 @@ const App: React.FC = () => {
 
         {/* Panel dla władz terytorialnych */}
         <Route path="/panel" element={<PrivateRoute><PanelPage /></PrivateRoute>} />
+
+        <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
       </Routes>
     </Router>
   );
