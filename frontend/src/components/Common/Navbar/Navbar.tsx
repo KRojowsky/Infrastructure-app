@@ -13,7 +13,19 @@ interface User {
   avatar?: string;
 }
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  statusFilter: string;
+  priorityFilter: string;
+  onStatusChange: (value: string) => void;
+  onPriorityChange: (value: string) => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({
+  statusFilter,
+  priorityFilter,
+  onStatusChange,
+  onPriorityChange,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
@@ -26,7 +38,9 @@ const Navbar: React.FC = () => {
         const res = await fetch('http://localhost:8000/api/users/me/', {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         if (!res.ok) throw new Error('Nie można pobrać użytkownika');
+
         const data = await res.json();
         setUser(data);
       } catch (err) {
@@ -37,9 +51,6 @@ const Navbar: React.FC = () => {
     fetchUser();
   }, []);
 
-  const avatarUrl =
-    user?.avatar || `https://i.pravatar.cc/150?u=${user?.first_name || 'placeholder'}`;
-
   const handleLogout = () => {
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
@@ -49,33 +60,47 @@ const Navbar: React.FC = () => {
 
   return (
     <header className="navbar">
-      <div className="navbar-logo">
-        <img src={logo} alt="Logo" />
-      </div>
-
+      {/* FILTRY */}
       <div className="navbar-center">
-        <select className="navbar-filter">
-          <option>Status</option>
+        <select
+          className="navbar-filter"
+          value={statusFilter}
+          onChange={(e) => onStatusChange(e.target.value)}
+        >
+          <option value="">Wszystkie statusy</option>
           <option value="pending">Oczekujące</option>
           <option value="in-progress">W trakcie</option>
           <option value="done">Zakończone</option>
         </select>
 
-        <select className="navbar-filter">
-          <option>Priorytet</option>
+        <select
+          className="navbar-filter"
+          value={priorityFilter}
+          onChange={(e) => onPriorityChange(e.target.value)}
+        >
+          <option value="">Wszystkie priorytety</option>
           <option value="low">Niski</option>
           <option value="medium">Średni</option>
           <option value="high">Wysoki</option>
         </select>
       </div>
 
+      {/* PRAWY PANEL */}
       <div className="navbar-right">
-        <img src={avatarUrl} className="navbar-avatar" alt="Avatar" />
+        {user?.avatar && (
+          <Link to="/profile" className="navbar-avatar-link">
+            <img
+              src={user.avatar}
+              className="navbar-avatar"
+              alt="Avatar"
+            />
+          </Link>
+        )}
 
         {user ? (
           <Link to="/profile" className="navbar-name">
             {user.role === 'authority'
-              ? `${user.office_name }`
+              ? user.office_name
               : `${user.first_name} ${user.last_name}`}
           </Link>
         ) : (

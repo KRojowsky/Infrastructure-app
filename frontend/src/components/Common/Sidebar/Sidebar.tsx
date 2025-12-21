@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Sidebar.scss';
-import logo from '../../../assets/images/Home/navbar/logo.png';
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
@@ -9,7 +8,6 @@ const Sidebar: React.FC = () => {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <img src={logo} alt="Logo" />
         <h2>InfraFix</h2>
       </div>
 
@@ -23,9 +21,6 @@ const Sidebar: React.FC = () => {
           </li>
           <li className={location.pathname === '/history' ? 'active' : ''}>
             <Link to="/history">📜 Historia</Link>
-          </li>
-          <li>
-            <Link to="/notifications">🔔 Powiadomienia</Link>
           </li>
           <li className={location.pathname === '/settings' ? 'active' : ''}>
             <Link to="/settings">⚙️ Ustawienia</Link>

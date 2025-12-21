@@ -23,13 +23,24 @@ interface Report {
   images: ReportImage[];
   author_name: string;
   author_avatar?: string;
+  city?: string;
+  likes_count: number;
+  comments_count: number;
+  is_liked: boolean;
 }
 
-const Feed: React.FC = () => {
+interface FeedProps {
+  statusFilter: string;
+  priorityFilter: string;
+}
+
+const Feed: React.FC<FeedProps> = ({
+  statusFilter,
+  priorityFilter,
+}) => {
   const [reports, setReports] = useState<Report[]>([]);
   const [selectedPost, setSelectedPost] = useState<Report | null>(null);
 
-  // Mapa kategorii po polsku
   const categoryLabels: Record<string, string> = {
     energy: 'Energetyka',
     water: 'Woda / kanalizacja',
@@ -49,30 +60,46 @@ const Feed: React.FC = () => {
     fetchReports();
   }, []);
 
+  const filteredReports = reports.filter((report) => {
+    const statusMatch =
+      !statusFilter || report.status === statusFilter;
+
+    const priorityMatch =
+      !priorityFilter || report.priority === priorityFilter;
+
+    return statusMatch && priorityMatch;
+  });
+
   return (
     <>
       <div className="feed">
-        {reports.map((report) => (
+        {filteredReports.map((report) => (
           <FeedItem
             key={report.id}
             post={{
               id: report.id,
               author: report.author_name || 'Anonim',
-              author_avatar: report.author_avatar || 'http://localhost:8000/media/avatars/avatar.svg',
+              author_avatar: report.author_avatar,
               time: new Date(report.created_at).toLocaleString(),
-              city: report.city,
+              city: report.city || '',
               images: report.images.map((img) => img.image),
               description: report.description,
               category: categoryLabels[report.category] || report.category,
               status: report.status,
               priority: report.priority,
-              likes: report.likes_count,        // <- pobierz z backendu
-              comments: report.comments_count,  // <- pobierz z backendu
-              is_liked_by_me: report.is_liked,  // <- pobierz z backendu
+              likes: report.likes_count,
+              comments: report.comments_count,
+              is_liked_by_me: report.is_liked,
             }}
             onClick={setSelectedPost}
           />
         ))}
+
+        {filteredReports.length === 0 && (
+          <div className="feed-empty">
+            Brak zgłoszeń dla wybranych filtrów
+          </div>
+        )}
       </div>
 
       <Modal isOpen={!!selectedPost} onClose={() => setSelectedPost(null)}>

@@ -14,7 +14,7 @@ const MainSectionFirst: React.FC = () => {
         playsInline
       />
       <div className="main-section-content">
-        <h1>System zgłaszania problemów infrastruktury regionalnej</h1>
+        <h1>System zgłaszania i zarządzania problemami infrastruktury publicznej</h1>
         <h2>Zgłoś awarię, monitoruj stan infrastruktury, ulepszaj swoją okolicę!</h2>
         <button className="report-button">Zgłoś awarię</button>
       </div>

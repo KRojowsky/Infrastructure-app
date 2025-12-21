@@ -1,21 +1,28 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './SidebarMobile.scss';
 
 const SidebarMobile: React.FC = () => {
+  const location = useLocation();
+
   return (
     <nav className="sidebar-mobile">
       <ul>
-        <li>
-          <Link to="/dashboard">📃</Link>
+        <li className={location.pathname === '/dashboard' ? 'active' : ''}>
+          <Link to="/dashboard" title="Zgłoszenia">📃</Link>
         </li>
-        <li>
-          <Link to="/new-report">➕</Link>
+
+        <li className={location.pathname === '/new-report' ? 'active' : ''}>
+          <Link to="/new-report" title="Nowe zgłoszenie">➕</Link>
         </li>
-        <li>📜</li>
-        <li>🔔</li>
-        <li>⚙️</li>
-        <li>📊</li>
+
+        <li className={location.pathname === '/history' ? 'active' : ''}>
+          <Link to="/history" title="Historia">📜</Link>
+        </li>
+
+        <li className={location.pathname === '/settings' ? 'active' : ''}>
+          <Link to="/settings" title="Ustawienia">⚙️</Link>
+        </li>
       </ul>
     </nav>
   );

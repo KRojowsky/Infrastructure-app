@@ -9,7 +9,7 @@ interface Post {
   city: string;
   images: string[];
   description: string;
-  status: string;
+  status: 'pending' | 'in-progress' | 'done';
   priority: string;
   category: string;
   likes: number;
@@ -77,7 +77,10 @@ const FeedItem: React.FC<Props> = ({ post, onClick }) => {
   };
 
   return (
-    <div className="feed-item" onClick={() => onClick(post)}>
+    <div
+      className={`feed-item status-${post.status}`}
+      onClick={() => onClick(post)}
+    >
       {/* HEADER */}
       <div className="feed-item-header">
         <img src={avatarUrl} alt={post.author} className="feed-item-avatar" />
@@ -112,7 +115,6 @@ const FeedItem: React.FC<Props> = ({ post, onClick }) => {
 
       {/* META */}
       <div className="feed-item-meta">
-        <span className="category">{post.category}</span>
         <span className={`status ${post.status}`}>
           {post.status === 'pending'
             ? 'Oczekujące'
@@ -127,12 +129,13 @@ const FeedItem: React.FC<Props> = ({ post, onClick }) => {
             ? 'Średni'
             : 'Wysoki'}
         </span>
+        <span className="category">{post.category}</span>
       </div>
 
       {/* FEEDBACK */}
       <div className="feed-item-feedback">
-        <div 
-          className={`flag-btn ${liked ? 'flagged' : ''}`} 
+        <div
+          className={`flag-btn ${liked ? 'flagged' : ''}`}
           onClick={toggleLike}
           role="button"
         >
@@ -140,7 +143,6 @@ const FeedItem: React.FC<Props> = ({ post, onClick }) => {
           <span className="flag-count">{likes}</span>
         </div>
 
-        {/* Jeśli chcesz, komentarze w estetycznej formie */}
         <div className="comments-display">
           <span className="comment-icon">💬</span>
           <span className="comment-count">{post.comments}</span>

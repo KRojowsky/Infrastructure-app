@@ -7,19 +7,20 @@ interface Comment {
   author_name: string;
   author_avatar?: string;
   created_at: string;
-  author_role?: string; // Załóżmy, że zwracamy role autora (np. "authority" dla władz terytorialnych)
+  author_role?: string;
 }
 
 interface Post {
   id: number;
   author: string;
-  avatar: string;
+  author_avatar?: string;
   time: string;
-  images: string[];
-  description: string;
+  city?: string;
+  images?: string[];
+  description?: string;
   status: 'pending' | 'in-progress' | 'done';
   priority: 'low' | 'medium' | 'high';
-  category: string;
+  category?: string;
   likes: number;
   comments: number;
   is_liked_by_me?: boolean;
@@ -31,14 +32,13 @@ interface Props {
 
 const PostModal: React.FC<Props> = ({ post }) => {
   const [imageIndex, setImageIndex] = useState(0);
-  const [likes, setLikes] = useState(post.likes);
+  const [likes, setLikes] = useState(post.likes || 0);
   const [liked, setLiked] = useState(!!post.is_liked_by_me);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
 
   const token = localStorage.getItem('access');
 
-  // Mapowanie statusów, priorytetów i kategorii na czytelne etykiety
   const statusLabels: Record<string, string> = {
     pending: 'Oczekujące',
     'in-progress': 'W trakcie',
@@ -61,11 +61,12 @@ const PostModal: React.FC<Props> = ({ post }) => {
   const fetchComments = async () => {
     if (!token) return;
     try {
-      const res = await fetch(`http://localhost:8000/api/reports/${post.id}/comments/`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `http://localhost:8000/api/reports/${post.id}/comments/`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       const data = await res.json();
-      setComments(data);
+      setComments(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Błąd pobierania komentarzy:', err);
     }
@@ -75,16 +76,23 @@ const PostModal: React.FC<Props> = ({ post }) => {
     fetchComments();
   }, [post.id]);
 
-  const nextImage = () => setImageIndex((prev) => (prev + 1) % post.images.length);
-  const prevImage = () => setImageIndex((prev) => (prev - 1 + post.images.length) % post.images.length);
+  const nextImage = () =>
+    setImageIndex((prev) => (prev + 1) % (post.images?.length || 1));
+  const prevImage = () =>
+    setImageIndex(
+      (prev) => (prev - 1 + (post.images?.length || 1)) % (post.images?.length || 1)
+    );
 
   const toggleLike = async () => {
     if (!token) return;
     try {
-      const res = await fetch(`http://localhost:8000/api/reports/${post.id}/like/`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `http://localhost:8000/api/reports/${post.id}/like/`,
+        {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const data = await res.json();
       if (data.liked) {
         setLikes((prev) => prev + 1);
@@ -101,72 +109,100 @@ const PostModal: React.FC<Props> = ({ post }) => {
   const addComment = async () => {
     if (!token || !newComment.trim()) return;
     try {
-      const res = await fetch(`http://localhost:8000/api/reports/${post.id}/comments/`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content: newComment }),
-      });
+      const res = await fetch(
+        `http://localhost:8000/api/reports/${post.id}/comments/`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ content: newComment }),
+        }
+      );
       const data = await res.json();
       setComments((prev) => [...prev, data]);
       setNewComment('');
-
-      // Jeśli autor jest z władz terytorialnych, wyślij event do InfoBoard
       if (data.author_role === 'authority') {
-        const event = new CustomEvent('newAuthorityComment', { detail: data });
-        window.dispatchEvent(event);
+        window.dispatchEvent(
+          new CustomEvent('newAuthorityComment', { detail: data })
+        );
       }
     } catch (err) {
       console.error('Błąd dodawania komentarza:', err);
     }
   };
 
+  const avatarUrl = post.author_avatar || 'http://localhost:8000/media/avatars/avatar.svg';
+
   return (
-    <div className="post-modal">
+    <div className={`post-modal status-${post.status}`}>
       {/* HEADER */}
       <div className="post-modal-header">
-        <img src={post.avatar} alt={post.author} className="post-modal-avatar" />
-        <div>
-          <strong>{post.author}</strong>
-          <div className="post-modal-time">{post.time}</div>
+        <img src={avatarUrl} alt={post.author} className="post-modal-avatar" />
+        <div className="post-modal-header-text">
+          <div className="post-modal-author">{post.author}</div>
+          <div className="post-modal-time">
+            {post.time}
+            {post.city && <span className="post-modal-city"> • {post.city}</span>}
+          </div>
         </div>
       </div>
 
       {/* IMAGE */}
-      <div className="post-modal-image-wrapper">
-        {post.images.length > 1 && (
-          <button onClick={prevImage} className="post-modal-nav post-modal-nav-left">‹</button>
-        )}
-        <img src={post.images[imageIndex]} alt={`Post ${imageIndex}`} className="post-modal-image" />
-        {post.images.length > 1 && (
-          <button onClick={nextImage} className="post-modal-nav post-modal-nav-right">›</button>
-        )}
-      </div>
+      {post.images && post.images.length > 0 && (
+        <div className="post-modal-image-wrapper">
+          {post.images.length > 1 && (
+            <button
+              onClick={prevImage}
+              className="post-modal-nav post-modal-nav-left"
+            >
+              ‹
+            </button>
+          )}
+          <img
+            src={post.images[imageIndex]}
+            alt={`Post ${post.id}`}
+            className="post-modal-image"
+          />
+          {post.images.length > 1 && (
+            <button
+              onClick={nextImage}
+              className="post-modal-nav post-modal-nav-right"
+            >
+              ›
+            </button>
+          )}
+        </div>
+      )}
 
       {/* DESCRIPTION */}
-      <p className="post-modal-desc">{post.description}</p>
+      <div className="post-modal-desc">{post.description || ''}</div>
 
-      {/* META: STATUS / PRIORYTET / KATEGORIA */}
+      {/* META */}
       <div className="post-modal-meta">
-        <span className={`category`}>{categoryLabels[post.category] || post.category}</span>
         <span className={`status ${post.status}`}>{statusLabels[post.status]}</span>
-        <span className={`priority-label ${post.priority}`}>{priorityLabels[post.priority]}</span>
+        <span className={`priority-label ${post.priority}`}>
+          {priorityLabels[post.priority]}
+        </span>
+        <span className="category">{post.category}</span>
       </div>
 
-      {/* FOOTER: LAJKI + LICZBA KOMENTARZY */}
+      {/* FOOTER */}
       <div className="post-modal-footer">
-        <button className={`like-btn ${liked ? 'liked' : ''}`} onClick={toggleLike}>
+        <div
+          className={`like-btn ${liked ? 'liked' : ''}`}
+          onClick={toggleLike}
+          role="button"
+        >
           ❤️ {likes}
-        </button>
-        <span>💬 {comments.length}</span>
+        </div>
+        <div className="comments-display">💬 {comments.length}</div>
       </div>
 
-      {/* KOMENTARZE */}
+      {/* COMMENTS */}
       <div className="post-modal-comments">
         <h4>Komentarze ({comments.length})</h4>
-
         {comments.map((c) => (
           <div key={c.id} className="comment-item">
             <img
@@ -177,13 +213,14 @@ const PostModal: React.FC<Props> = ({ post }) => {
             <div className="comment-content">
               <div className="comment-header">
                 <strong>{c.author_name}</strong>
-                <span className="comment-time">{new Date(c.created_at).toLocaleString()}</span>
+                <span className="comment-time">
+                  {new Date(c.created_at).toLocaleString()}
+                </span>
               </div>
               <p>{c.content}</p>
             </div>
           </div>
         ))}
-
         <div className="comment-add">
           <textarea
             placeholder="Dodaj komentarz..."

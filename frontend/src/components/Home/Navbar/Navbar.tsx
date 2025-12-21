@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Navbar.scss';
-import logo from '../../../assets/images/Home/navbar/logo.png';
 
 const Navbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +24,6 @@ const Navbar: React.FC = () => {
         <header className="navbar">
             <div className="navbar-left">
                 <Link to="/" className="navbar-logo" onClick={closeMenu}>
-                    <img src={logo} alt="InfraFix logo" className="navbar-logo-img" />
                     <span className="navbar-logo-text">InfraFix</span>
                 </Link>
             </div>
