@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
+import { useNavigate } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./NewReport.scss";
@@ -33,14 +34,21 @@ const LocationPicker: React.FC<{
   return null;
 };
 
+/** 🔹 centruje mapę po ustawieniu lokalizacji */
+const RecenterMap: React.FC<{ lat: number; lon: number }> = ({ lat, lon }) => {
+  const map = useMap();
+  map.setView([lat, lon], 15);
+  return null;
+};
+
 const NewReport: React.FC = () => {
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("other");
   const [images, setImages] = useState<FileList | null>(null);
-  const [location, setLocation] = useState<{ lat: number; lon: number } | null>(
-    null
-  );
+  const [location, setLocation] = useState<{ lat: number; lon: number } | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleLocate = () => {
@@ -81,11 +89,9 @@ const NewReport: React.FC = () => {
           Authorization: `Bearer ${localStorage.getItem("access")}`,
         },
       });
+
       alert("✅ Zgłoszenie wysłane pomyślnie!");
-      setTitle("");
-      setDescription("");
-      setImages(null);
-      setLocation(null);
+      navigate("/dashboard");
     } catch (err) {
       console.error(err);
       alert("❌ Błąd przy wysyłaniu zgłoszenia.");
@@ -96,13 +102,17 @@ const NewReport: React.FC = () => {
 
   return (
     <div className="new-report">
+      <button className="back-btn" onClick={() => navigate(-1)}>
+        <span className="arrow">←</span>
+        <span>Wróć</span>
+      </button>
+
       <h2>➕ Nowe zgłoszenie</h2>
 
       <form onSubmit={handleSubmit}>
         <label>Tytuł zgłoszenia:</label>
         <input
           type="text"
-          placeholder="Np. Uszkodzona latarnia przy ulicy..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
@@ -110,7 +120,6 @@ const NewReport: React.FC = () => {
 
         <label>Opis problemu:</label>
         <textarea
-          placeholder="Opisz dokładnie problem..."
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
@@ -125,44 +134,32 @@ const NewReport: React.FC = () => {
           ))}
         </select>
 
-        <label>Zdjęcia (możesz dodać kilka):</label>
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={(e) => setImages(e.target.files)}
-        />
+        <label>Zdjęcia:</label>
+        <input type="file" multiple accept="image/*" onChange={(e) => setImages(e.target.files)} />
 
         <div className="map-container">
           <button type="button" onClick={handleLocate}>
             📍 Użyj mojej lokalizacji
           </button>
-          <p>Kliknij na mapę, aby ustawić lokalizację zgłoszenia:</p>
 
           <MapContainer
-            center={
-              location ? [location.lat, location.lon] : [52.2297, 21.0122]
-            }
+            center={location ? [location.lat, location.lon] : [52.2297, 21.0122]}
             zoom={13}
             style={{ height: "300px", width: "100%", borderRadius: "10px" }}
           >
             <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <LocationPicker setLocation={setLocation} />
-            {location && <Marker position={[location.lat, location.lon]} />}
+
+            {location && (
+              <>
+                <RecenterMap lat={location.lat} lon={location.lon} />
+                <Marker position={[location.lat, location.lon]} />
+              </>
+            )}
           </MapContainer>
         </div>
-
-        {location && (
-          <p className="coords">
-            Wybrana lokalizacja:{" "}
-            <strong>
-              {location.lat.toFixed(4)}, {location.lon.toFixed(4)}
-            </strong>
-          </p>
-        )}
 
         <button type="submit" disabled={loading}>
           {loading ? "Wysyłanie..." : "Dodaj zgłoszenie"}

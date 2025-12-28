@@ -204,6 +204,54 @@
       }
     }
 
+    .comment-item.authority-comment {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  border: 1.5px solid #ff9800;
+  border-radius: 12px;
+  background-color: #fff4e0;
+  padding: 0.5rem;
+
+  .comment-avatar {
+    border: 1.5px solid #ff9800;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .comment-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .comment-header {
+      strong {
+        color: #d8701a;  // Office Name
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+
+      .comment-time {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-left: 0.5rem;
+      }
+    }
+
+    p {
+      margin-top: 0.25rem;
+      background-color: #fff8f0;  // pole tekstowe
+      padding: 0.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      color: #4e342e;
+    }
+  }
+}
+
+
     .comment-add {
       display: flex;
       flex-direction: column;

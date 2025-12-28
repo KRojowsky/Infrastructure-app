@@ -1,10 +1,54 @@
 .new-report {
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+
+    color: #0d3b66;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+    transition: all 0.25s ease;
+
+    .arrow {
+      font-size: 1.1rem;
+      transition: transform 0.25s ease;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.75);
+      box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.2);
+
+      .arrow {
+        transform: translateX(-3px);
+      }
+    }
+
+    &:active {
+      transform: scale(0.96);
+    }
+  }
+
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 4rem 1rem;
+  padding: 2.5rem 1rem;
   background: 
     linear-gradient(rgba(220, 229, 241, 1), rgba(220, 229, 241, 0.5)),
     url('../../../assets/images/pattern/pattern.png');

@@ -203,24 +203,31 @@ const PostModal: React.FC<Props> = ({ post }) => {
       {/* COMMENTS */}
       <div className="post-modal-comments">
         <h4>Komentarze ({comments.length})</h4>
-        {comments.map((c) => (
-          <div key={c.id} className="comment-item">
-            <img
-              src={c.author_avatar || 'http://localhost:8000/media/avatars/avatar.svg'}
-              alt={c.author_name}
-              className="comment-avatar"
-            />
-            <div className="comment-content">
-              <div className="comment-header">
-                <strong>{c.author_name}</strong>
-                <span className="comment-time">
-                  {new Date(c.created_at).toLocaleString()}
-                </span>
+        {comments.map((c) => {
+          const isAuthority = c.author_role === 'authority';
+          return (
+            <div
+              key={c.id}
+              className={`comment-item ${isAuthority ? 'authority-comment' : ''}`}
+            >
+              <img
+                src={c.author_avatar || 'http://localhost:8000/media/avatars/avatar.svg'}
+                alt={isAuthority ? c.office_name : c.author_name}
+                className="comment-avatar"
+              />
+              <div className="comment-content">
+                <div className="comment-header">
+                  <strong>{isAuthority ? c.office_name : c.author_name}</strong>
+                  <span className="comment-time">
+                    {new Date(c.created_at).toLocaleString()}
+                  </span>
+                </div>
+                <p>{c.content}</p>
               </div>
-              <p>{c.content}</p>
             </div>
-          </div>
-        ))}
+          );
+        })}
+
         <div className="comment-add">
           <textarea
             placeholder="Dodaj komentarz..."

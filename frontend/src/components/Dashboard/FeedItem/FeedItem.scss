@@ -187,3 +187,54 @@
     &-meta { span { font-size: 0.7rem; padding: 3px 10px; } }
   }
 }
+
+// SELECT STATUSU
+.feed-item-meta select {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  appearance: none; // usuwa domyślny wygląd przeglądarki
+  background-color: #ff6b6b; // domyślny kolor (pending)
+  transition: background-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+// zmiana koloru select w zależności od wartości
+.feed-item-meta select option[value="pending"] {
+  background-color: #ff6b6b;
+  color: #fff;
+}
+
+.feed-item-meta select option[value="in-progress"] {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.feed-item-meta select option[value="done"] {
+  background-color: #28a745;
+  color: #fff;
+}
+
+// Dodatkowo, aby select "dziedziczył" kolor z wybranego statusu:
+.feed-item-meta select:has(option:checked[value="pending"]) {
+  background-color: #ff6b6b;
+  color: #fff;
+}
+
+.feed-item-meta select:has(option:checked[value="in-progress"]) {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.feed-item-meta select:has(option:checked[value="done"]) {
+  background-color: #28a745;
+  color: #fff;
+}
+

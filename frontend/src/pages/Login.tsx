@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff } from 'lucide-react'; // 👁️ ikony
+import { Eye, EyeOff } from 'lucide-react';
 import Navbar from '../components/Home/Navbar/Navbar';
 import './Login.scss';
 
@@ -16,6 +16,7 @@ const Login: React.FC = () => {
     setError(null);
 
     try {
+      // 🔐 LOGIN
       const res = await fetch('http://localhost:8000/api/auth/login/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -29,22 +30,29 @@ const Login: React.FC = () => {
         return;
       }
 
+      // 💾 TOKENS
       localStorage.setItem('access', data.access);
       localStorage.setItem('refresh', data.refresh);
 
-      // pobranie użytkownika żeby sprawdzić rolę
+      // 👤 POBRANIE USERA
       const userRes = await fetch('http://localhost:8000/api/users/me/', {
-        headers: { Authorization: `Bearer ${data.access}` },
+        headers: {
+          Authorization: `Bearer ${data.access}`,
+        },
       });
 
       const userData = await userRes.json();
 
+      // 🔑 ZAPIS ROLI
+      localStorage.setItem('role', userData.role);
+
+      // 🚦 ROUTING
       if (userData.role === 'community') {
         navigate('/dashboard');
       } else if (userData.role === 'authority') {
         navigate('/panel');
       } else {
-        navigate('/'); // fallback
+        navigate('/');
       }
 
     } catch (err) {
@@ -55,8 +63,10 @@ const Login: React.FC = () => {
   return (
     <div className="login-page">
       <Navbar />
+
       <div className="login-container">
         <h2>Logowanie</h2>
+
         <form onSubmit={handleSubmit}>
           <input
             type="email"
@@ -74,11 +84,11 @@ const Login: React.FC = () => {
               placeholder="Hasło"
               required
             />
+
             <button
               type="button"
               className="toggle-password"
               onClick={() => setShowPassword(prev => !prev)}
-              aria-label={showPassword ? 'Ukryj hasło' : 'Pokaż hasło'}
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>

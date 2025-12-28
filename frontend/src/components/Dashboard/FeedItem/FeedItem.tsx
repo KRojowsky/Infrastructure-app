@@ -26,11 +26,14 @@ const FeedItem: React.FC<Props> = ({ post, onClick }) => {
   const [imageIndex, setImageIndex] = useState(0);
   const [likes, setLikes] = useState(post.likes);
   const [liked, setLiked] = useState(post.is_liked_by_me || false);
+  const [status, setStatus] = useState(post.status);
 
   const token = localStorage.getItem('access');
+  const role = localStorage.getItem('role'); // rola zalogowanego usera
   const avatarUrl =
     post.author_avatar || 'http://localhost:8000/media/avatars/avatar.svg';
 
+  // fetch stanu raportu
   const fetchPostState = async () => {
     if (!token) return;
     try {
@@ -76,10 +79,33 @@ const FeedItem: React.FC<Props> = ({ post, onClick }) => {
     }
   };
 
+  // zmiana statusu (tylko frontend, bez backend permissions)
+  const handleStatusChange = async (newStatus: Post['status']) => {
+    if (!token) return;
+
+    try {
+      const res = await fetch(`http://localhost:8000/api/reports/${post.id}/status/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!res.ok) throw new Error('Nie udało się zmienić statusu');
+
+      const data = await res.json();
+      setStatus(data.status); // zaktualizuj stan w frontendzie
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div
-      className={`feed-item status-${post.status}`}
-      onClick={() => onClick(post)}
+      className={`feed-item status-${status}`}
+      onClick={() => onClick({ ...post, status })}
     >
       {/* HEADER */}
       <div className="feed-item-header">
@@ -96,7 +122,9 @@ const FeedItem: React.FC<Props> = ({ post, onClick }) => {
       {/* IMAGE */}
       <div className="feed-item-image-wrapper">
         {post.images.length > 1 && (
-          <button onClick={prevImage} className="feed-item-nav feed-item-nav-left">‹</button>
+          <button onClick={prevImage} className="feed-item-nav feed-item-nav-left">
+            ‹
+          </button>
         )}
         <img
           src={post.images[imageIndex]}
@@ -104,7 +132,9 @@ const FeedItem: React.FC<Props> = ({ post, onClick }) => {
           className="feed-item-image"
         />
         {post.images.length > 1 && (
-          <button onClick={nextImage} className="feed-item-nav feed-item-nav-right">›</button>
+          <button onClick={nextImage} className="feed-item-nav feed-item-nav-right">
+            ›
+          </button>
         )}
       </div>
 
@@ -115,13 +145,27 @@ const FeedItem: React.FC<Props> = ({ post, onClick }) => {
 
       {/* META */}
       <div className="feed-item-meta">
-        <span className={`status ${post.status}`}>
-          {post.status === 'pending'
-            ? 'Oczekujące'
-            : post.status === 'in-progress'
-            ? 'W trakcie'
-            : 'Zakończone'}
-        </span>
+        {/* jeśli rola = authority, pokaz select do zmiany statusu */}
+        {role === 'authority' ? (
+          <select
+            value={status}
+            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => handleStatusChange(e.target.value as Post['status'])}
+          >
+            <option value="pending">Oczekujące</option>
+            <option value="in-progress">W trakcie</option>
+            <option value="done">Zakończone</option>
+          </select>
+        ) : (
+          <span className={`status ${status}`}>
+            {status === 'pending'
+              ? 'Oczekujące'
+              : status === 'in-progress'
+              ? 'W trakcie'
+              : 'Zakończone'}
+          </span>
+        )}
+
         <span className={`priority-label ${post.priority}`}>
           {post.priority === 'low'
             ? 'Niski'
@@ -134,11 +178,7 @@ const FeedItem: React.FC<Props> = ({ post, onClick }) => {
 
       {/* FEEDBACK */}
       <div className="feed-item-feedback">
-        <div
-          className={`flag-btn ${liked ? 'flagged' : ''}`}
-          onClick={toggleLike}
-          role="button"
-        >
+        <div className={`flag-btn ${liked ? 'flagged' : ''}`} onClick={toggleLike} role="button">
           <span className="flag-icon">🚩</span>
           <span className="flag-count">{likes}</span>
         </div>

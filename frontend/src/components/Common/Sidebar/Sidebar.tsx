@@ -4,6 +4,7 @@ import './Sidebar.scss';
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
+  const role = localStorage.getItem('role');
 
   return (
     <aside className="sidebar">
@@ -16,12 +17,17 @@ const Sidebar: React.FC = () => {
           <li className={location.pathname === '/dashboard' ? 'active' : ''}>
             <Link to="/dashboard">📃 Zgłoszenia</Link>
           </li>
-          <li className={location.pathname === '/new-report' ? 'active' : ''}>
-            <Link to="/new-report">➕ Nowe zgłoszenie</Link>
-          </li>
+
+          {role === 'community' && (
+            <li className={location.pathname === '/new-report' ? 'active' : ''}>
+              <Link to="/new-report">➕ Nowe zgłoszenie</Link>
+            </li>
+          )}
+
           <li className={location.pathname === '/history' ? 'active' : ''}>
             <Link to="/history">📜 Historia</Link>
           </li>
+
           <li className={location.pathname === '/settings' ? 'active' : ''}>
             <Link to="/settings">⚙️ Ustawienia</Link>
           </li>

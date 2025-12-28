@@ -4,6 +4,7 @@ import './SidebarMobile.scss';
 
 const SidebarMobile: React.FC = () => {
   const location = useLocation();
+  const role = localStorage.getItem('role');
 
   return (
     <nav className="sidebar-mobile">
@@ -12,9 +13,11 @@ const SidebarMobile: React.FC = () => {
           <Link to="/dashboard" title="Zgłoszenia">📃</Link>
         </li>
 
-        <li className={location.pathname === '/new-report' ? 'active' : ''}>
-          <Link to="/new-report" title="Nowe zgłoszenie">➕</Link>
-        </li>
+        {role === 'community' && (
+          <li className={location.pathname === '/new-report' ? 'active' : ''}>
+            <Link to="/new-report" title="Nowe zgłoszenie">➕</Link>
+          </li>
+        )}
 
         <li className={location.pathname === '/history' ? 'active' : ''}>
           <Link to="/history" title="Historia">📜</Link>
