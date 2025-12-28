@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import MeView, RegisterView, ReportCreateView, ReportListView, UserReportListView, ToggleLikeView, ReportCommentListCreateView
+from .views import MeView, RegisterView, ReportCreateView, ReportListView, UserReportListView, ToggleLikeView, ReportCommentListCreateView,  ReportStatusUpdateView, LatestCommentsByCity
 
 urlpatterns = [
     path('auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -12,5 +12,7 @@ urlpatterns = [
     path('reports/user/', UserReportListView.as_view(), name='user_report_list'),
     path('reports/<int:report_id>/like/', ToggleLikeView.as_view()),
     path('reports/<int:report_id>/comments/', ReportCommentListCreateView.as_view()),
+    path('reports/<int:report_id>/status/', ReportStatusUpdateView.as_view(), name='report-status-update'),
+    path('latest-comments/', LatestCommentsByCity.as_view(), name='latest-comments'),
 ]
 

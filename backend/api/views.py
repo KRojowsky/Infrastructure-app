@@ -5,10 +5,12 @@ from rest_framework import status, generics, permissions
 from .serializers import RegisterSerializer, UserDetailSerializer, ReportSerializer, ReportCommentSerializer
 from .models import Report, ReportImage, ReportLike, ReportComment
 from django.shortcuts import get_object_or_404
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 class MeView(APIView):
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]  # konieczne dla plików
 
     def get(self, request):
         serializer = UserDetailSerializer(request.user, context={'request': request})
@@ -16,7 +18,10 @@ class MeView(APIView):
 
     def patch(self, request):
         serializer = UserDetailSerializer(
-            request.user, data=request.data, context={'request': request}, partial=True
+            request.user,
+            data=request.data,
+            context={'request': request},
+            partial=True
         )
         if serializer.is_valid():
             serializer.save()
@@ -117,3 +122,35 @@ class ReportCommentListCreateView(generics.ListCreateAPIView):
             user=self.request.user,
             report_id=self.kwargs['report_id']
         )
+
+
+class ReportStatusUpdateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, report_id):
+        report = get_object_or_404(Report, id=report_id)
+
+        # tylko authority może zmieniać status
+        if request.user.role != 'authority':
+            return Response({"detail": "Brak uprawnień"}, status=status.HTTP_403_FORBIDDEN)
+
+        new_status = request.data.get('status')
+        if new_status not in ['pending', 'in-progress', 'done']:
+            return Response({"detail": "Nieprawidłowy status"}, status=status.HTTP_400_BAD_REQUEST)
+
+        report.status = new_status
+        report.save()
+        return Response({"id": report.id, "status": report.status})
+
+
+class LatestCommentsByCity(generics.ListAPIView):
+    serializer_class = ReportCommentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        city = user.city
+        # 10 ostatnich komentarzy w mieście użytkownika
+        return ReportComment.objects.filter(
+            report__city=city
+        ).order_by('-created_at')[:10]

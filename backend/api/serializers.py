@@ -36,13 +36,14 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
-    avatar = serializers.SerializerMethodField()
+    avatar = serializers.ImageField(required=False)
+    avatar_url = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'avatar', 'role', 'office_name'] 
+        fields = ['email', 'first_name', 'last_name', 'avatar', 'avatar_url', 'role', 'office_name']  # <-- dodaj email
 
-    def get_avatar(self, obj):
+    def get_avatar_url(self, obj):
         request = self.context.get('request')
         if obj.avatar:
             return request.build_absolute_uri(obj.avatar.url)
@@ -104,6 +105,10 @@ class ReportSerializer(serializers.ModelSerializer):
 class ReportCommentSerializer(serializers.ModelSerializer):
     author_name = serializers.CharField(source='user.get_full_name', read_only=True)
     author_avatar = serializers.SerializerMethodField()
+    author_role = serializers.CharField(source='user.role', read_only=True)
+    office_name = serializers.CharField(source='user.office_name', read_only=True)
+    report_id = serializers.IntegerField(source='report.id', read_only=True)
+    is_authority = serializers.SerializerMethodField()
 
     class Meta:
         model = ReportComment
@@ -112,11 +117,18 @@ class ReportCommentSerializer(serializers.ModelSerializer):
             'content',
             'created_at',
             'author_name',
-            'author_avatar'
+            'author_avatar',
+            'author_role',
+            'office_name',
+            'report_id',
+            'is_authority',
         ]
 
     def get_author_avatar(self, obj):
         request = self.context.get('request')
         if obj.user.avatar:
             return request.build_absolute_uri(obj.user.avatar.url)
-        return request.build_absolute_uri(settings.MEDIA_URL + 'avatars/avatar.svg')
+        return request.build_absolute_uri('/media/avatars/avatar.svg')
+
+    def get_is_authority(self, obj):
+        return obj.user.role == 'authority'
